@@ -91,7 +91,7 @@ const $ = id => document.getElementById(id);
 let me = null, ratings = {};
 
 $("title").textContent = CONFIG.title;
-$("rule").textContent = `請為每位同學的作業打 1~5 分(5 分最高)。3、4、5 分各最多 ${CONFIG.limits[5]} 人,每位同學都必須評分。`;
+$("rule").textContent = `請為每位同學的作業打 0~5 分(5 分最高)，若該號碼無作品表示未交作業或作業格式錯誤。3、4、5 分各最多 ${CONFIG.limits[5]} 人,每位同學都必須評分。`;
 
 $("start").onclick = () => {
   const name = $("sname").value.trim(), id = $("sid").value.trim();
@@ -111,7 +111,7 @@ function render() {
     <div class="card row" id="r${s.id}">
       <div class="name"><b>${s.id} 號 ${s.name}</b>${s.link ? `<small><a href="${s.link}" target="_blank" rel="noopener">查看作業</a></small>` : ""}</div>
       <div class="btns" role="group" aria-label="${s.name} 的分數">
-        ${[1,2,3,4,5].map(v => `<button type="button" data-id="${s.id}" data-v="${v}">${v}</button>`).join("")}
+        ${[0,1,2,3,4,5].map(v => `<button type="button" data-id="${s.id}" data-v="${v}">${v}</button>`).join("")}
       </div>
     </div>`).join("");
   $("list").onclick = e => {
@@ -171,11 +171,11 @@ $("expRaw").onclick = async () => {
 $("expSum").onclick = async () => {
   const rows = await loadAll(); if (!rows) return;
   const data = rows.slice(1);
-  const out = [["座號", "姓名", "評分人數", "平均分", "5分", "4分", "3分", "2分", "1分"]];
+  const out = [["順序", "評分人數", "平均分", "5分", "4分", "3分", "2分", "1分", "0分"]];
   S.forEach((s, i) => {
-    const vals = data.map(r => Number(r[3 + i])).filter(v => v >= 1 && v <= 5);
+    const vals = data.map(r => r[3 + i]).filter(x => x !== "" && x != null).map(Number).filter(v => v >= 0 && v <= 5);
     const avg = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2) : "";
-    out.push([s.id, s.name, vals.length, avg, ...[5,4,3,2,1].map(k => vals.filter(v => v === k).length)]);
+    out.push([s.id, s.name, vals.length, avg, ...[5,4,3,2,1,0].map(k => vals.filter(v => v === k).length)]);
   });
   saveCSV("各作業統計.csv", out);
 };
