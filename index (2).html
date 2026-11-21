@@ -79,7 +79,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 const CONFIG = {
   title: "班級作業互評",
   // 貼上 Google Apps Script 部署後的網頁應用程式網址(見 Code.gs 說明);留空則為測試模式
-  endpoint: "",
+  endpoint: "https://script.google.com/macros/s/AKfycbxBm0o0zn6ltdv29ITj8MhC37NAI_tqC1XKvMo4SBNZN_Rt_s-n8MyLQqBsEfTpeoFr/exec",
   // 學生名單:座號依序為 1~64。把「同學01」換成真實姓名;也可在姓名後用 | 附上作業連結,如 "王小明|https://..."
   students: Array.from({length: 64}, (_, i) => "同學" + String(i + 1).padStart(2, "0")),
   limits: {5: 12, 4: 12, 3: 12}   // 各分數人數上限;1、2 分不限
